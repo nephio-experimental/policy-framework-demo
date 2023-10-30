@@ -47,3 +47,7 @@ Register the repository in `kpt` :
 kpt alpha repo register --namespace default http://{ip}:{port}/deployments.git   # Ensure main branch is available as we configured our RootSync for this branch
 ```
 
+Fetch the example package for demo :
+```
+$ kpt pkg get https://github.com/GoogleContainerTools/kpt-functions-catalog.git/examples/gatekeeper-disallow-root-user
+```
