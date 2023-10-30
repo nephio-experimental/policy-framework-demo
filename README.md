@@ -51,3 +51,8 @@ Fetch the example package for demo :
 ```
 $ kpt pkg get https://github.com/GoogleContainerTools/kpt-functions-catalog.git/examples/gatekeeper-disallow-root-user
 ```
+
+Execute the `demo.sh` for the end to end execution of demo:
+```
+$ ./demo.sh
+```
