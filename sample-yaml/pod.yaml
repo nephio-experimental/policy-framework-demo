@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod  # represent sample application
+metadata:
+  name: super-web-server
+  labels:
+    name: super-web-server
+spec:
+  containers:
+  - name: web-server
+    image: localhost:5000/go-app:kube-session
+    imagePullPolicy: Always
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+    - containerPort: 8080

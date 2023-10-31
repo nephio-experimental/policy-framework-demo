@@ -1,0 +1,46 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8savoidtag
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sAvoidTag
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package K8sAvoidTag
+
+        import future.keywords
+        #violation[{"msg": msg}] {
+        #  msg := sprintf("Review object: %v", [input.review])
+        #}
+        #default containsTag = false
+
+        violation[{"msg": msg}] {
+           container := input.review.object.spec.containers[_]
+           tags := [forbid | tag = input.parameters.tags[_] ; forbid = endswith(container.image, concat(":", ["", tag]))]
+           any(tags)
+           msg := sprintf("container <%v> uses a disallowed tag <%v>; disallowed tags are %v", [container.name, container.image, input.parameters.tags])
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAvoidTag
+metadata:
+  name: avoid-latest-tag
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  parameters:
+    tags: ["kube-session"]
